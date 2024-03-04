@@ -48,7 +48,7 @@ def model_maker(input_shape, num_classes):
     px = keras.layers.Average()([px, xs2])
 
     # flatten
-    ex = keras.layers.Conv2D(64, 3, padding="same")(px)
+    ex = keras.layers.Conv2D(32, 3, padding="same")(px)
     ex = keras.layers.Activation("relu")(ex)
     ex = keras.layers.GlobalAveragePooling2D()(ex)
     if num_classes == 2:
