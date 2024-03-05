@@ -17,10 +17,10 @@ def data_augmentation(images):
     return images
 def model_maker(input_shape, num_classes):
     input = keras.Input(shape=input_shape)# [None, 28,28,1]
-    x = data_augmentation(input)
-    x = keras.layers.Rescaling(1. / 255)(x)
+    # x = data_augmentation(input)
+    # x = keras.layers.Rescaling(1. / 255)(x)
     # block 1
-    x = keras.layers.Conv2D(16,3, strides=2, padding="same")(x) # [None, 14,14,16]
+    x = keras.layers.Conv2D(16,3, strides=2, padding="same")(input) # [None, 14,14,16]
     x = keras.layers.Activation("relu")(x)
     x = keras.layers.Conv2D(16,3, strides=1, padding="same")(x)
     x = keras.layers.Activation("relu")(x)
@@ -48,17 +48,19 @@ def model_maker(input_shape, num_classes):
     px = keras.layers.Average()([px, xs2])
 
     # flatten
-    ex = keras.layers.Conv2D(32, 3, padding="same")(px)
-    ex = keras.layers.Activation("relu")(ex)
-    ex = keras.layers.GlobalAveragePooling2D()(ex)
+    ex = keras.layers.Flatten()(px)
+    # ex = keras.layers.Conv2D(32, 3, padding="same")(px)
+    # ex = keras.layers.Activation("relu")(ex)
+    # ex = keras.layers.GlobalAveragePooling2D()(ex)
     if num_classes == 2:
         units = 1
     else:
         units = num_classes
-
-    x = keras.layers.Dropout(0.25)(ex)
+    # x = keras.layers.Dropout(0.25)(ex)
     # We specify activation=None so as to return logits
-    output = keras.layers.Dense(units, activation=None)(x)
+    ex = keras.layers.Dense(64,activation="relu")(ex)
+    output = keras.layers.Dense(10,activation="softmax")(ex)
+    # output = keras.layers.Dense(units, activation=None)(x)
     return keras.Model(input, output)
 
 
