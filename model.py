@@ -46,6 +46,7 @@ def model_maker(input_shape, num_classes):
     px = keras.layers.Activation("relu")(px)
     px = keras.layers.Conv2D(48, 3, padding="same")(px)
     px = keras.layers.Average()([px, xs2])
+    px = keras.layers.Activation("relu")(px)
 
     # flatten
     ex = keras.layers.Flatten()(px)
