@@ -4,8 +4,15 @@ This architecture comes from TEED. It is used
 for  image classification
 """
 import keras
+import tensorflow as tf
 import numpy as np
 
+
+class k_smish(keras.layers.Layer):
+    def call(self, inp):
+        x= inp
+        xDot = tf.math.tanh(tf.math.log(1-tf.sigmoid(x)))
+        return inp * xDot
 
 def data_augmentation(images):
     data_augmentation_layers = [
@@ -58,7 +65,7 @@ def model_maker(input_shape, num_classes):
     else:
         units = num_classes
     # x = keras.layers.Dropout(0.25)(ex)
-    # We specify activation=None so as to return logits
+    # We specify activation=None so it return logits
     ex = keras.layers.Dense(64,activation="relu")(ex)
     output = keras.layers.Dense(10,activation="softmax")(ex)
     # output = keras.layers.Dense(units, activation=None)(x)
