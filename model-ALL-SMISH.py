@@ -77,7 +77,7 @@ def model_maker(input_shape, num_classes):
         units = num_classes
     # x = keras.layers.Dropout(0.25)(ex)
     # We specify activation=None so it return logits
-    ex = keras.layers.Dense(64,activation="relu")(ex)
+    ex = keras.layers.Dense(64,activation=k_smish2)(ex)
     output = keras.layers.Dense(10,activation="softmax")(ex)
     # output = keras.layers.Dense(units, activation=None)(x)
     return keras.Model(input, output)
