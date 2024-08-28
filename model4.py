@@ -4,14 +4,15 @@ This architecture comes from TEED. It is used
 for  image classification
 """
 import keras
-from keras import backend as K
+
 import tensorflow as tf
+
 import numpy as np
 
 
 def k_smish2(x):
     inp = x
-    xDot = K.tanh(K.log(1-K.sigmoid(x)))
+    xDot = keras.ops.tanh(keras.ops.log(1-keras.ops.sigmoid(x)))
     return inp * xDot
 
 class k_smish(keras.layers.Layer):
