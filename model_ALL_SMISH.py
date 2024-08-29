@@ -46,23 +46,29 @@ def model_maker(input_shape, num_classes):
     px = keras.layers.Conv2D(32, 3, padding="same")(px) # [None, 7,7,32]
     # px = keras.layers.Activation("relu")(px)
     px = k_smish()(px)
-    px = keras.layers.Conv2D(32, 3, padding="same", activation=k_smish2)(px)
-    xs2 =keras.layers.Conv2D(48,1, strides=1, activation=k_smish2)(px) #skep Connection 2
+    px = keras.layers.Conv2D(32, 3, padding="same")(px)
+    px = k_smish()(px)
+    xs2 =keras.layers.Conv2D(48,1, strides=1)(px) #skep Connection 2
+    xs2 = k_smish()(xs2)
 
     # block3-1
     px = keras.layers.add([xs1,px])
     # px = keras.layers.Activation("relu")(px)
     # px = k_smish()(px)
-    px = keras.layers.Conv2D(48, 3, padding="same", activation=k_smish2)(px)
+    px = keras.layers.Conv2D(48, 3, padding="same")(px)
     # px = keras.layers.Activation("relu")(px)
-    px = keras.layers.Conv2D(48, 3, padding="same", activation=k_smish2)(px)
+    px = k_smish()(px)
+    px = keras.layers.Conv2D(48, 3, padding="same")(px)
+    px = k_smish()(px)
     px = keras.layers.Average()([px,xs2])
     # block3-2
     # px = keras.layers.Activation("relu")(px)
     # px = k_smish()(px)
-    px = keras.layers.Conv2D(48, 3, padding="same", activation=k_smish2)(px)
+    px = keras.layers.Conv2D(48, 3, padding="same")(px)
     # px = keras.layers.Activation("relu")(px)
-    px = keras.layers.Conv2D(48, 3, padding="same", activation=k_smish2)(px)
+    px = k_smish()(px)
+    px = keras.layers.Conv2D(48, 3, padding="same")(px)
+    px = k_smish()(px)
     px = keras.layers.Average()([px, xs2])
     # px = keras.layers.Activation("relu")(px)
     # px = k_smish2(px)
@@ -79,7 +85,8 @@ def model_maker(input_shape, num_classes):
         units = num_classes
     # x = keras.layers.Dropout(0.25)(ex)
     # We specify activation=None so it return logits
-    ex = keras.layers.Dense(64,activation=k_smish2)(ex)
+    ex = keras.layers.Dense(64)(ex)
+    ex = k_smish()(ex)
     output = keras.layers.Dense(10,activation="softmax")(ex)
     # output = keras.layers.Dense(units, activation=None)(x)
     return keras.Model(input, output)
