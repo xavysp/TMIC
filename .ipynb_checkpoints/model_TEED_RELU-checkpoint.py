@@ -7,26 +7,7 @@ import keras
 import tensorflow as tf
 import numpy as np
 
-def k_smish2(x):
-    inp = x
-    xDot = keras.ops.tanh(keras.ops.log(1+keras.ops.sigmoid(x)))
-    return inp * xDot
 
-class k_smish(keras.layers.Layer):
-    def call(self, inp):
-        x= inp
-        xDot = tf.math.tanh(tf.math.log(1+tf.sigmoid(x)))
-        return inp * xDot
-
-
-def data_augmentation(images):
-    data_augmentation_layers = [
-        keras.layers.RandomFlip("horizontal"),
-        keras.layers.RandomRotation(0.1),
-    ]
-    for layer in data_augmentation_layers:
-        images = layer(images)
-    return images
 def model_maker(input_shape, num_classes):
     input = keras.Input(shape=input_shape)# [None, 28,28,1]
     # x = data_augmentation(input)
@@ -71,8 +52,7 @@ def model_maker(input_shape, num_classes):
         units = num_classes
     # x = keras.layers.Dropout(0.25)(ex)
     # We specify activation=None so it return logits
-    ex = keras.layers.Dense(64)(ex)
-    ex = k_smish()(ex)
+    ex = keras.layers.Dense(64,activation="relu")(ex)
     output = keras.layers.Dense(10,activation="softmax")(ex)
     # output = keras.layers.Dense(units, activation=None)(x)
     return keras.Model(input, output)

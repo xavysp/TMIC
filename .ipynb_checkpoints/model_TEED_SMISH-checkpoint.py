@@ -5,7 +5,6 @@ for  image classification
 """
 import keras
 import tensorflow as tf
-import numpy as np
 
 def k_smish2(x):
     inp = x
@@ -17,7 +16,6 @@ class k_smish(keras.layers.Layer):
         x= inp
         xDot = tf.math.tanh(tf.math.log(1+tf.sigmoid(x)))
         return inp * xDot
-
 
 def data_augmentation(images):
     data_augmentation_layers = [
@@ -32,33 +30,36 @@ def model_maker(input_shape, num_classes):
     # x = data_augmentation(input)
     # x = keras.layers.Rescaling(1. / 255)(x)
     # block 1
-    x = keras.layers.Conv2D(16,3, strides=2, padding="same")(input) # [None, 14,14,16]
-    x = keras.layers.Activation("relu")(x)
-    x = keras.layers.Conv2D(16,3, strides=1, padding="same")(x)
-    x = keras.layers.Activation("relu")(x)
+    x = keras.layers.Conv2D(16,3, strides=2, padding="same", activation=k_smish2)(input) # [None, 14,14,16]
+    # x = keras.layers.Activation("smish")(x)
+    x = keras.layers.Conv2D(16,3, strides=1, padding="same", activation=k_smish2)(x)
+    # x = keras.layers.Activation("relu")(x)
     xs1 =keras.layers.Conv2D(32,1, strides=2,padding="same")(x) #skep Connection # [None, 7,7,32]
 
     # Block 2
     px = keras.layers.MaxPooling2D(3,2,"same")(x)
-    px = keras.layers.Conv2D(32, 3, padding="same")(px) # [None, 7,7,32]
-    px = keras.layers.Activation("relu")(px)
+    px = keras.layers.Conv2D(32, 3, padding="same", activation=k_smish2)(px) # [None, 7,7,32]
+    # px = keras.layers.Activation("relu")(px)
     px = keras.layers.Conv2D(32, 3, padding="same")(px)
     xs2 =keras.layers.Conv2D(48,1, strides=1)(px) #skep Connection 2
 
     # block3-1
     px = keras.layers.add([xs1,px])
-    px = keras.layers.Activation("relu")(px)
-    px = keras.layers.Conv2D(48, 3, padding="same")(px)
-    px = keras.layers.Activation("relu")(px)
+    # px = keras.layers.Activation("relu")(px)
+    px = k_smish()(px)
+    px = keras.layers.Conv2D(48, 3, padding="same", activation=k_smish2)(px)
+    # px = keras.layers.Activation("relu")(px)
     px = keras.layers.Conv2D(48, 3, padding="same")(px)
     px = keras.layers.Average()([px,xs2])
     # block3-2
-    px = keras.layers.Activation("relu")(px)
-    px = keras.layers.Conv2D(48, 3, padding="same")(px)
-    px = keras.layers.Activation("relu")(px)
+    # px = keras.layers.Activation("relu")(px)
+    px = k_smish()(px)
+    px = keras.layers.Conv2D(48, 3, padding="same", activation=k_smish2)(px)
+    # px = keras.layers.Activation("relu")(px)
     px = keras.layers.Conv2D(48, 3, padding="same")(px)
     px = keras.layers.Average()([px, xs2])
-    px = keras.layers.Activation("relu")(px)
+    # px = keras.layers.Activation("relu")(px)
+    px = k_smish()(px)
 
     # flatten
     ex = keras.layers.Flatten()(px)
@@ -71,8 +72,7 @@ def model_maker(input_shape, num_classes):
         units = num_classes
     # x = keras.layers.Dropout(0.25)(ex)
     # We specify activation=None so it return logits
-    ex = keras.layers.Dense(64)(ex)
-    ex = k_smish()(ex)
+    ex = keras.layers.Dense(64,activation=k_smish2)(ex)
     output = keras.layers.Dense(10,activation="softmax")(ex)
     # output = keras.layers.Dense(units, activation=None)(x)
     return keras.Model(input, output)
