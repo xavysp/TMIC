@@ -10,13 +10,13 @@ import tensorflow as tf
 
 def k_smish2(x):
     inp = x
-    xDot = keras.ops.tanh(keras.ops.log(1-keras.ops.sigmoid(x)))
+    xDot = keras.ops.tanh(keras.ops.log(1+keras.ops.sigmoid(x)))
     return inp * xDot
 
 class k_smish(keras.layers.Layer):
     def call(self, inp):
         x= inp
-        xDot = tf.math.tanh(tf.math.log(1-tf.sigmoid(x)))
+        xDot = tf.math.tanh(tf.math.log(1+tf.sigmoid(x)))
         return inp * xDot
 
 def data_augmentation(images):
