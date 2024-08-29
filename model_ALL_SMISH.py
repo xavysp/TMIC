@@ -16,7 +16,7 @@ def k_smish2(x):
 class k_smish(keras.layers.Layer):
     def call(self, inp):
         x= inp
-        xDot = keras.ops.tanh(keras.ops.log(1-keras.ops.sigmoid(x)))
+        xDot = tf.math.tanh(tf.math.log(1-tf.sigmoid(x)))
         return inp * xDot
 
 def data_augmentation(images):
