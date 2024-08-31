@@ -30,16 +30,19 @@ def model_maker(input_shape, num_classes):
     # x = data_augmentation(input)
     # x = keras.layers.Rescaling(1. / 255)(x)
     # block 1
-    x = keras.layers.Conv2D(16,3, strides=2, padding="same", activation=k_smish2)(input) # [None, 14,14,16]
+    x = keras.layers.Conv2D(16,3, strides=2, padding="same")(input) # [None, 14,14,16]
     # x = keras.layers.Activation("smish")(x)
-    x = keras.layers.Conv2D(16,3, strides=1, padding="same", activation=k_smish2)(x)
+    x = k_smish()(x)
+    x = keras.layers.Conv2D(16,3, strides=1, padding="same")(x)
     # x = keras.layers.Activation("relu")(x)
+    x = k_smish()(x)
     xs1 =keras.layers.Conv2D(32,1, strides=2,padding="same")(x) #skep Connection # [None, 7,7,32]
 
     # Block 2
     px = keras.layers.MaxPooling2D(3,2,"same")(x)
-    px = keras.layers.Conv2D(32, 3, padding="same", activation=k_smish2)(px) # [None, 7,7,32]
+    px = keras.layers.Conv2D(32, 3, padding="same")(px) # [None, 7,7,32]
     # px = keras.layers.Activation("relu")(px)
+    px = k_smish()(px)
     px = keras.layers.Conv2D(32, 3, padding="same")(px)
     xs2 =keras.layers.Conv2D(48,1, strides=1)(px) #skep Connection 2
 
@@ -47,15 +50,17 @@ def model_maker(input_shape, num_classes):
     px = keras.layers.add([xs1,px])
     # px = keras.layers.Activation("relu")(px)
     px = k_smish()(px)
-    px = keras.layers.Conv2D(48, 3, padding="same", activation=k_smish2)(px)
+    px = keras.layers.Conv2D(48, 3, padding="same")(px)
     # px = keras.layers.Activation("relu")(px)
+    px = k_smish()(px)
     px = keras.layers.Conv2D(48, 3, padding="same")(px)
     px = keras.layers.Average()([px,xs2])
     # block3-2
     # px = keras.layers.Activation("relu")(px)
     px = k_smish()(px)
-    px = keras.layers.Conv2D(48, 3, padding="same", activation=k_smish2)(px)
+    px = keras.layers.Conv2D(48, 3, padding="same")(px)
     # px = keras.layers.Activation("relu")(px)
+    px = k_smish()(px)
     px = keras.layers.Conv2D(48, 3, padding="same")(px)
     px = keras.layers.Average()([px, xs2])
     # px = keras.layers.Activation("relu")(px)
