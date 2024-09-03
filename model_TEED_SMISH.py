@@ -71,14 +71,14 @@ def model_maker(input_shape, num_classes):
     # ex = keras.layers.Conv2D(32, 3, padding="same")(px)
     # ex = keras.layers.Activation("relu")(ex)
     # ex = keras.layers.GlobalAveragePooling2D()(ex)
-    if num_classes == 2:
-        units = 1
-    else:
-        units = num_classes
-    # x = keras.layers.Dropout(0.25)(ex)
+#    if num_classes == 2:
+#        units = 1
+#    else:
+#        units = num_classes
+    ex = keras.layers.Dropout(0.5)(ex)
     # We specify activation=None so it return logits
     ex = keras.layers.Dense(64,activation=k_smish2)(ex)
-    output = keras.layers.Dense(10,activation="softmax")(ex)
+    output = keras.layers.Dense(num_classes,activation="softmax")(ex)
     # output = keras.layers.Dense(units, activation=None)(x)
     return keras.Model(input, output)
 
