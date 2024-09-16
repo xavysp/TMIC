@@ -18,7 +18,6 @@ class k_smish(keras.layers.Layer):
         xDot = tf.math.tanh(tf.math.log(1+tf.sigmoid(x)))
         return inp * xDot
 
-
 def data_augmentation(images):
     data_augmentation_layers = [
         keras.layers.RandomFlip("horizontal"),
