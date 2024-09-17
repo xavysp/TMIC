@@ -31,8 +31,8 @@ def model_maker(input_shape, num_classes):
     # x = keras.layers.Rescaling(1. / 255)(x)
     # TMIC size
     #tmic_size->  48=small, 128 = medium, 256 = large
-    m_size = 128 # model size from the third block
-    f_size = 64 if m_size==48 else 128
+    m_size = 48 # model size from the third block
+    f_size = 256 if m_size==48 else 512
     # block 1
     x = keras.layers.Conv2D(16,3, strides=2, padding="same")(input) # [None, 14,14,16]
     # x = keras.layers.Activation("smish")(x)
