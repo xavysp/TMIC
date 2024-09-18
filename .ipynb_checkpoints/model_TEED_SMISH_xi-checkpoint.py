@@ -31,7 +31,7 @@ def model_maker(input_shape, num_classes):
     # x = keras.layers.Rescaling(1. / 255)(x)
     # TMIC size
     #tmic_size->  48=small, 128 = medium, 256 = large
-    m_size = 96 # model size from the third block
+    m_size = 64 # model size from the third block
     f_size = 192 if m_size==48 else 256
     # block 1
     x = keras.layers.Conv2D(16,3, strides=2, padding="same")(input) # [None, 14,14,16]
@@ -39,9 +39,10 @@ def model_maker(input_shape, num_classes):
     x = k_smish()(x)
     x = keras.layers.Conv2D(16,3, strides=1, padding="same")(x)
     # x = keras.layers.Activation("relu")(x)
-    x = k_smish()(x)
+    
     x = keras.layers.BatchNormalization(axis=-1)(x)
-    xs1 =keras.layers.Conv2D(32,1, strides=2,padding="same")(x) #skep Connection # [None, 7,7,32]
+    x = k_smish()(x)
+    ##xs1 =keras.layers.Conv2D(32,1, strides=2,padding="same")(x) #skep Connection # [None, 7,7,32]
 
     # Block 2
     px = keras.layers.MaxPooling2D(3,2,"same")(x)
@@ -50,29 +51,31 @@ def model_maker(input_shape, num_classes):
     px = k_smish()(px)
     px = keras.layers.Conv2D(32, 3, padding="same")(px)
     px = keras.layers.BatchNormalization(axis=-1)(px)
-    xs2 =keras.layers.Conv2D(m_size,1, strides=1)(px) #skep Connection 2
+    px = k_smish()(px)
+    #xs2 =keras.layers.Conv2D(m_size,1, strides=1)(px) #skep Connection 2
 
     # block3-1
-    px = keras.layers.add([xs1,px])
+    ##px = keras.layers.add([xs1,px])
     # px = keras.layers.Activation("relu")(px)
-    px = k_smish()(px)
-    px = keras.layers.Conv2D(m_size, 3, padding="same")(px)
+    ##px = k_smish()(px)
+    ##px = keras.layers.Conv2D(m_size, 3, padding="same")(px)
     # px = keras.layers.Activation("relu")(px)
-    px = k_smish()(px)
-    px = keras.layers.Conv2D(m_size, 3, padding="same")(px)
-    px = keras.layers.Average()([px,xs2])
+    ##px = k_smish()(px)
+    ##px = keras.layers.Conv2D(m_size, 3, padding="same")(px)
+   # px = keras.layers.BatchNormalization(axis=-1)(px)
+    #px = keras.layers.Average()([px,xs2])
     # block3-2
     # px = keras.layers.Activation("relu")(px)
-    px = k_smish()(px)
-    px = keras.layers.Conv2D(m_size, 3, padding="same")(px)
-    # px = keras.layers.Activation("relu")(px)
-    px = k_smish()(px)
-    px = keras.layers.Conv2D(m_size, 3, padding="same")(px)
-    px = keras.layers.Average()([px, xs2])
-    # px = keras.layers.Activation("relu")(px)
-    px = k_smish()(px)
-    px = keras.layers.Dropout(0.25)(px)
-    px = keras.layers.BatchNormalization(axis=-1)(px)
+    #px = k_smish()(px)
+    #px = keras.layers.Conv2D(m_size, 3, padding="same")(px)
+    ## px = keras.layers.Activation("relu")(px)
+    #px = k_smish()(px)
+    #px = keras.layers.Conv2D(m_size, 3, padding="same")(px)
+    #px = keras.layers.Average()([px, xs2])
+    ## px = keras.layers.Activation("relu")(px)
+    #px = k_smish()(px)
+    ##px = keras.layers.Dropout(0.25)(px)
+    #px = keras.layers.BatchNormalization(axis=-1)(px)
     
 
     # flatten
