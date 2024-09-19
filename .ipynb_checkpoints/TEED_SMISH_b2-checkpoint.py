@@ -27,13 +27,13 @@ def data_augmentation(images):
     return images
 def model_maker(input_shape, num_classes):
     input = keras.Input(shape=input_shape)# [None, 28,28,1]
-    #x = data_augmentation(input)# augmentation
+    x = data_augmentation(input)# augmentation
     # TMIC size
     #tmic_size->  48=small, 128 = medium, 256 = large
     m_size = 48 # model size from the third block
     f_size = 128 if m_size==48 else 128
     # block 1
-    x = keras.layers.Conv2D(16,3, strides=2, padding="same")(input) #  input[None, 14,14,16]
+    x = keras.layers.Conv2D(16,3, strides=2, padding="same")(x) #  input[None, 14,14,16]
     # x = keras.layers.Activation("smish")(x)
     x = k_smish()(x)
     x = keras.layers.Conv2D(16,3, strides=1, padding="same")(x)
